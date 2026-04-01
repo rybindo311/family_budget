@@ -70,7 +70,7 @@ The application supports three environment modes:
 | Mode | Command | Purpose |
 |------|---------|---------|
 | Development | `make up-dev` | Local development with hot reload and test data |
-| Testing | `make up-test` | Running automated tests |
+| Testing | `make up-test` | Running automated tests (not implemented) |
 | Production | `make up` | Optimized production deployment |
 
 ## 🌱 Test Data
