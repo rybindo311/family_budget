@@ -19,7 +19,7 @@ def hello_name(name: str) -> dict:
     return {"message": f"Hello {name}!"}
     
 @app.post("/transaction/", response_model=TransactionResponse)
-async def post_transaction (
+async def post_transactions (
     data: TransactionCreate,
     user_id: int,
     session: SessionDep) -> TransactionResponse:
@@ -37,14 +37,13 @@ async def post_transaction (
     
 @app.get("/transactions/")
 async def get_transactions(
-    user_id: int,
-
+    user_ids: List[int],
     session: SessionDep) -> List[TransactionResponse]:
     
     service = TransactionsService(session)
 
     transactions = await service.get_transactions(
-        user_id
+        user_ids=user_ids
     )
 
     return transactions

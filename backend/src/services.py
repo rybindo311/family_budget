@@ -139,7 +139,7 @@ class AnalyticService:
 
             result = await self.db.execute(query)
  
-            return result.scalar().all()
+            return result.scalars().all()
         
         except Exception as e:
             raise  ValueError(f"Ошибка при запросе: {str(e)}")

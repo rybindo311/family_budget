@@ -31,6 +31,7 @@ class TransactionCreate(TransactionBase):
 class Transaction(TransactionBase):
     id: int
     user_id: int
+    user_name: str
     date: datetime
 
 class TransactionResponse(Transaction):
