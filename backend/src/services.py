@@ -47,46 +47,42 @@ class TransactionsService:
     ) -> List[TransactionsOrm]:
         """Поиск транзакций по фильтрам"""
         
-        try:
-            query = select(TransactionsOrm).distinct()
+        query = select(TransactionsOrm)
             
-            conditions = []
+        conditions = []
             
-            if transaction_id is not None:
-                conditions.append(TransactionsOrm.id == transaction_id)
+        if transaction_id is not None:
+            conditions.append(TransactionsOrm.id == transaction_id)
                 
-            if user_ids is not None:
-                conditions.append(TransactionsOrm.user_id.in_(user_ids))
+        if user_ids is not None:
+            conditions.append(TransactionsOrm.user_id.in_(user_ids))
 
-            if from_date is not None and to_date is not None:
-                conditions.append(
-                    between(
-                        TransactionsOrm.date, 
-                        from_date, 
-                        to_date
-                    )
+        if from_date is not None and to_date is not None:
+            conditions.append(
+                between(
+                    TransactionsOrm.date, 
+                    from_date, 
+                    to_date
                 )
-            else:
-                if from_date is not None:
-                    conditions.append(TransactionsOrm.date >= from_date)
-                if to_date is not None:
-                    conditions.append(TransactionsOrm.date <= to_date)
+            )
+        else:
+            if from_date is not None:
+                conditions.append(TransactionsOrm.date >= from_date)
+            if to_date is not None:
+                conditions.append(TransactionsOrm.date <= to_date)
                 
-            if categories is not None:
-                conditions.append(TransactionsOrm.category.in_(categories))
+        if categories is not None:
+            conditions.append(TransactionsOrm.category.in_(categories))
                 
-            if min_sum is not None:
-                conditions.append(TransactionsOrm.sum >= min_sum)
+        if min_sum is not None:
+            conditions.append(TransactionsOrm.sum >= min_sum)
                         
-            if conditions:
-                query = query.where(and_(*conditions))
+        if conditions:
+            query = query.where(and_(*conditions))
             
-            result = await self.db.execute(query)
+        result = await self.db.execute(query)
             
-            return result.scalars().all()
-        
-        except Exception as e:
-            raise  ValueError(f"Ошибка при запросе: {str(e)}")
+        return result.scalars().all()
 
 
 class AnalyticService:
@@ -102,47 +98,46 @@ class AnalyticService:
             to_date: datetime | None = None
     ) -> dict:
         
-        try:
-            query = select(
-                UsersOrm.username,
-                TransactionsOrm.category,
-                func.count(TransactionsOrm),
-                func.sum(TransactionsOrm.sum)
-            ).join(TransactionsOrm).group_by(
-                UsersOrm.id,
-                UsersOrm.username,
-                TransactionsOrm.category
-            )
-
-            conditions = []
-
-            conditions.append(UsersOrm.id == user_id)
-
-            if from_date is not None and to_date is not None:
-                conditions.append(
-                    between(
-                        TransactionsOrm.date, 
-                        from_date, 
-                        to_date
-                    )
-                )
-            else:
-                if from_date is not None:
-                    conditions.append(TransactionsOrm.date >= from_date)
-                if to_date is not None:
-                    conditions.append(TransactionsOrm.date <= to_date) 
-
-            if categories is not None:
-                conditions.append(TransactionsOrm.category.in_(categories))
-
-            query = query.where(*conditions)
-
-            result = await self.db.execute(query)
- 
-            return result.scalars().all()
         
-        except Exception as e:
-            raise  ValueError(f"Ошибка при запросе: {str(e)}")
+        query = select(
+            UsersOrm.username,
+            TransactionsOrm.category,
+            func.count(TransactionsOrm),
+            func.sum(TransactionsOrm.sum)
+        ).join(
+            TransactionsOrm, UsersOrm.id == TransactionsOrm.user_id
+        ).group_by(
+            UsersOrm.id,
+            UsersOrm.username,
+            TransactionsOrm.category
+        )
+
+        conditions = []
+
+        conditions.append(UsersOrm.id == user_id)
+
+        if from_date is not None and to_date is not None:
+            conditions.append(
+                between(
+                    TransactionsOrm.date, 
+                    from_date, 
+                    to_date
+                )
+            )
+        else:
+            if from_date is not None:
+                conditions.append(TransactionsOrm.date >= from_date)
+            if to_date is not None:
+                conditions.append(TransactionsOrm.date <= to_date) 
+
+        if categories is not None:
+            conditions.append(TransactionsOrm.category.in_(categories))
+
+        query = query.where(*conditions)
+
+        result = await self.db.execute(query)
+ 
+        return result.all()
 
 
 

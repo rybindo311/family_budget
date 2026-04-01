@@ -31,7 +31,6 @@ class TransactionCreate(TransactionBase):
 class Transaction(TransactionBase):
     id: int
     user_id: int
-    user_name: str
     date: datetime
 
 class TransactionResponse(Transaction):
@@ -44,7 +43,6 @@ class TransactionResponse(Transaction):
             "example": {
                 "id": 1,
                 "user_id": 1,
-                "user_name": "Иван Инванов",
                 "sum": 1.000,
                 "category": "food",
                 "date": "2024-01-01T12:00:00",

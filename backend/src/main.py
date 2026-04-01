@@ -46,4 +46,7 @@ async def get_transactions(
         user_ids=user_ids
     )
 
-    return transactions
+    return [
+        TransactionResponse.model_validate(t)
+        for t in transactions
+    ]

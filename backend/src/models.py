@@ -27,7 +27,7 @@ class TransactionsOrm(BaseOrm):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), 
-        default=datetime.now(timezone.utc)
+        default=lambda: datetime.now(timezone.utc)
     )
     sum: Mapped[int]
     category: Mapped[str_100]
