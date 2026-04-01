@@ -1,0 +1,1 @@
+This is a service for keeping track of family budgets with a Telegram bot.
