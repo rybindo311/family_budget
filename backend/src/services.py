@@ -53,7 +53,7 @@ class TransactionsService:
             conditions = []
             
             if transaction_id is not None:
-                conditions.append(TransactionsOrm.id == id)
+                conditions.append(TransactionsOrm.id == transaction_id)
                 
             if user_ids is not None:
                 conditions.append(TransactionsOrm.user_id.in_(user_ids))
@@ -139,7 +139,7 @@ class AnalyticService:
 
             result = await self.db.execute(query)
  
-            return result.scalar.all()
+            return result.scalar().all()
         
         except Exception as e:
             raise  ValueError(f"Ошибка при запросе: {str(e)}")
