@@ -11,10 +11,10 @@ class TransactionCategory(str, Enum):
     OTHER = "other"
 
 class TransactionBase(BaseModel):
-    sum: int = Field(..., description="Сумма в рублях")
+    amount: int = Field(..., description="Сумма в рублях")
     category: TransactionCategory
     
-    @field_validator('sum')
+    @field_validator('amount')
     @classmethod
     def validate_amount(cls, value):
         if value <= 0:
@@ -29,7 +29,7 @@ class TransactionCreate(TransactionBase):
     )
 
 class Transaction(TransactionBase):
-    id: int
+    transaction_id: int
     user_id: int
     date: datetime
 
@@ -41,9 +41,9 @@ class TransactionResponse(Transaction):
         from_attributes=True,
         json_schema_extra={
             "example": {
-                "id": 1,
+                "transaction_id": 1,
                 "user_id": 1,
-                "sum": 1.000,
+                "amount": 1.000,
                 "category": "food",
                 "date": "2024-01-01T12:00:00",
             },

@@ -23,13 +23,13 @@ class BaseOrm(DeclarativeBase):
 class TransactionsOrm(BaseOrm):
     __tablename__ = "transactions"
 
-    id: Mapped[intpk]
+    transaction_id: Mapped[intpk]
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), 
         default=lambda: datetime.now(timezone.utc)
     )
-    sum: Mapped[int]
+    amount: Mapped[int]
     category: Mapped[str_100]
     
     user: Mapped["UsersOrm"] = relationship(back_populates="transactions")
@@ -38,7 +38,7 @@ class TransactionsOrm(BaseOrm):
 class UsersOrm(BaseOrm):
     __tablename__ = "users"
     
-    id: Mapped[intpk]
+    user_id: Mapped[intpk]
     username: Mapped[str_100]
     family_id: Mapped[Optional[int]] = mapped_column(ForeignKey("families.id", ondelete="SET NULL"), nullable=True)
     
@@ -49,7 +49,7 @@ class UsersOrm(BaseOrm):
 class FamiliesOrm(BaseOrm):
     __tablename__ = "families"
     
-    id: Mapped[intpk]
+    family_id: Mapped[intpk]
     admin_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     name: Mapped[str_100]
     is_active: Mapped[bool]

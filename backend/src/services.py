@@ -52,7 +52,7 @@ class TransactionsService:
         conditions = []
             
         if transaction_id is not None:
-            conditions.append(TransactionsOrm.id == transaction_id)
+            conditions.append(TransactionsOrm.transaction_id == transaction_id)
                 
         if user_ids is not None:
             conditions.append(TransactionsOrm.user_id.in_(user_ids))
@@ -75,7 +75,7 @@ class TransactionsService:
             conditions.append(TransactionsOrm.category.in_(categories))
                 
         if min_sum is not None:
-            conditions.append(TransactionsOrm.sum >= min_sum)
+            conditions.append(TransactionsOrm.amount >= min_sum)
                         
         if conditions:
             query = query.where(and_(*conditions))
@@ -105,16 +105,16 @@ class AnalyticService:
             func.count(TransactionsOrm),
             func.sum(TransactionsOrm.sum)
         ).join(
-            TransactionsOrm, UsersOrm.id == TransactionsOrm.user_id
+            TransactionsOrm, UsersOrm.user_id == TransactionsOrm.user_id
         ).group_by(
-            UsersOrm.id,
+            UsersOrm.user_id,
             UsersOrm.username,
             TransactionsOrm.category
         )
 
         conditions = []
 
-        conditions.append(UsersOrm.id == user_id)
+        conditions.append(UsersOrm.user_id == user_id)
 
         if from_date is not None and to_date is not None:
             conditions.append(
