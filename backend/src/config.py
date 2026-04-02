@@ -14,7 +14,7 @@ class Settings (BaseSettings):
     DB_PORT: int = 5432
     DB_USER: str = "postgres"
     DB_PASS: str = "postgres"
-    DB_NAME: str = "test"
+    DB_NAME: str = "family_budget_local"
     
     ENVIRONMENT: Environments = Environments.LOCAL
 

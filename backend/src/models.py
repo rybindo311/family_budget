@@ -24,7 +24,7 @@ class TransactionsOrm(BaseOrm):
     __tablename__ = "transactions"
 
     transaction_id: Mapped[intpk]
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"), index=True)
     date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), 
         default=lambda: datetime.now(timezone.utc)
@@ -40,7 +40,7 @@ class UsersOrm(BaseOrm):
     
     user_id: Mapped[intpk]
     username: Mapped[str_100]
-    family_id: Mapped[Optional[int]] = mapped_column(ForeignKey("families.id", ondelete="SET NULL"), nullable=True)
+    family_id: Mapped[Optional[int]] = mapped_column(ForeignKey("families.family_id", ondelete="SET NULL"), nullable=True)
     
     family: Mapped[Optional["FamiliesOrm"]] = relationship(back_populates="users")
     transactions: Mapped[List["TransactionsOrm"]] = relationship(back_populates="user")
@@ -50,7 +50,7 @@ class FamiliesOrm(BaseOrm):
     __tablename__ = "families"
     
     family_id: Mapped[intpk]
-    admin_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    admin_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"))
     name: Mapped[str_100]
     is_active: Mapped[bool]
     
