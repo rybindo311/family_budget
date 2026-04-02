@@ -25,7 +25,7 @@ The project uses `make` for convenient deployment and management.
 ### Production Mode
 
 ```bash 
-make up
+make up-prod
 ```
 
 ### Available Commands
@@ -71,7 +71,7 @@ The application supports three environment modes:
 |------|---------|---------|
 | Development | `make up-dev` | Local development with hot reload and test data |
 | Testing | `make up-test` | Running automated tests (not implemented) |
-| Production | `make up` | Optimized production deployment |
+| Production | `make up-prod` | Optimized production deployment |
 
 ## 🌱 Test Data
 In development and testing modes, the application automatically seeds the database with:

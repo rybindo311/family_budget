@@ -1,11 +1,12 @@
 """Скрипт для заполнения БД тестовыми данными в dev-среде"""
 import asyncio
 from datetime import datetime, timedelta, timezone
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, select
+from sqlalchemy.orm import sessionmaker
 
-from src.config import settings  # если у вас есть settings, иначе импортируйте DATABASE_URL из другого места
-from src.models import BaseOrm, UsersOrm, FamiliesOrm, TransactionsOrm
+from backend.src.config import settings
+from backend.src.models import BaseOrm, UsersOrm, FamiliesOrm, TransactionsOrm
 
 
 async def seed_database():

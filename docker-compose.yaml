@@ -1,7 +1,6 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: family_budget_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -13,7 +12,7 @@ services:
     networks:
       - family_budget_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -22,7 +21,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: family_budget_backend
     environment:
       DB_HOST: db
       DB_PORT: 5432
