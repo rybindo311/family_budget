@@ -42,7 +42,11 @@ class UsersOrm(BaseOrm):
     username: Mapped[str_100]
     family_id: Mapped[Optional[int]] = mapped_column(ForeignKey("families.family_id", ondelete="SET NULL"), nullable=True)
     
-    family: Mapped[Optional["FamiliesOrm"]] = relationship(back_populates="users")
+    family: Mapped[Optional["FamiliesOrm"]] = relationship(
+        "FamiliesOrm",
+        back_populates="users",
+        foreign_keys=[family_id]
+    )
     transactions: Mapped[List["TransactionsOrm"]] = relationship(back_populates="user")
 
     
@@ -54,6 +58,9 @@ class FamiliesOrm(BaseOrm):
     name: Mapped[str_100]
     is_active: Mapped[bool]
     
-    users: Mapped[List["UsersOrm"]] = relationship(back_populates="family")
+    users: Mapped[List["UsersOrm"]] = relationship(
+        "UsersOrm",
+        back_populates="family",
+        foreign_keys="UsersOrm.family_id")
     admin: Mapped["UsersOrm"] = relationship(foreign_keys=[admin_id])
 
