@@ -8,6 +8,10 @@ from pydantic import BaseModel, Field, field_validator, ConfigDict, model_valida
 class TransactionCategory(str, Enum):
     FOOD = "food"
     TRANSPORT = "transport"
+    ENTERTAINMENT = "entertainment"
+    HEALTH = "health"
+    EDUCATION = "education"
+    UTILITY = "utility"
     OTHER = "other"
 
 class TransactionBase(BaseModel):

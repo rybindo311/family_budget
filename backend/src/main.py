@@ -1,7 +1,7 @@
 from functools import wraps
 from typing import List
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Query, HTTPException
 
 from database import SessionDep
 from schemas import TransactionCreate, TransactionResponse
@@ -12,7 +12,7 @@ app = FastAPI()
 
 @app.get("/")
 def hello() -> dict:
-    return {"message": "Hello World!"}
+    return {"message": "Hello World!!!"}
 
 @app.get("/hello/{name}")
 def hello_name(name: str) -> dict:
@@ -20,9 +20,9 @@ def hello_name(name: str) -> dict:
     
 @app.post("/transaction/", response_model=TransactionResponse)
 async def post_transactions (
+    session: SessionDep,
     data: TransactionCreate,
-    user_id: int,
-    session: SessionDep) -> TransactionResponse:
+    user_id: int) -> TransactionResponse:
     
     service = TransactionsService(session)
     
@@ -37,8 +37,8 @@ async def post_transactions (
     
 @app.get("/transactions/")
 async def get_transactions(
-    user_ids: List[int],
-    session: SessionDep) -> List[TransactionResponse]:
+    session: SessionDep,
+    user_ids: List[int] = Query(...)) -> List[TransactionResponse]:
     
     service = TransactionsService(session)
 
@@ -47,6 +47,6 @@ async def get_transactions(
     )
 
     return [
-        TransactionResponse.model_validate(t)
-        for t in transactions
+        TransactionResponse.model_validate(transaction)
+        for transaction in transactions
     ]

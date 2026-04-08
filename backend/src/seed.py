@@ -76,7 +76,7 @@ async def seed_database():
         users[5].family_id = families[2].family_id
         
         # 4. Создаём транзакции
-        categories = ["Еда", "Транспорт", "Развлечения", "Здоровье", "Образование", "Коммуналка"]
+        categories = ["food", "transport", "entertainment", "health", "education", "utility", "other"]
         
         transactions = []
         start_date = datetime.now() - timedelta(days=30)
