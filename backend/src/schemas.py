@@ -1,11 +1,13 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Generic, TypeVar
+from typing import Generic, List, Optional, TypeVar
 
+from fastapi import Query
 from pydantic import BaseModel, Field, field_validator, ConfigDict, model_validator
 
 
 class TransactionCategory(str, Enum):
+
     FOOD = "food"
     TRANSPORT = "transport"
     ENTERTAINMENT = "entertainment"
@@ -15,6 +17,7 @@ class TransactionCategory(str, Enum):
     OTHER = "other"
 
 class TransactionBase(BaseModel):
+
     amount: int = Field(..., description="Сумма в рублях")
     category: TransactionCategory
     
@@ -33,12 +36,12 @@ class TransactionCreate(TransactionBase):
     )
 
 class Transaction(TransactionBase):
+
     transaction_id: int
     user_id: int
     date: datetime
 
 class TransactionResponse(Transaction):
-
 
     model_config = ConfigDict(
         use_enum_values=True,
@@ -55,7 +58,21 @@ class TransactionResponse(Transaction):
         }
     )
 
+class TransictionFilters(BaseModel):
+
+    transaction_id: Optional[int] = Query(None, description="ID конкретной транзакции")
+    user_ids: Optional[List[int]] = Query(None, description="Список ID Пользователей")
+    categories: Optional[List[str]] = Query(None, description="Список названий категорий")
+    from_date: Optional[date] = Query(
+        None, 
+        description="Дата начала периода в формате YYYY-MM-DD)")
+    to_date: Optional[date] = Query(
+        None, 
+        description="Дата конца периода в формате YYYY-MM-DD)")
+    min_sum: Optional[int] = Query(None, description="Минимальная сумма транзакции")
+
 class DateRange (BaseModel):
+
     from_date: date
     to_date: date
 
@@ -89,5 +106,6 @@ class FamilyStatsResponse(StatsResponse):
 Stats = TypeVar("Stats", bound=StatsResponse)
 
 class LimitedStatsResponse (BaseModel, Generic[Stats]):
+
     period: DateRange
     stats: Stats

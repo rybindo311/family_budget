@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from typing import List
 
 from sqlalchemy import between, func, select, and_
@@ -41,8 +41,8 @@ class TransactionsService:
                 transaction_id: int | None = None,
                 user_ids: List[int] | None = None,
                 categories: List[str] | None = None,
-                from_date: datetime | None = None,
-                to_date: datetime | None = None,
+                from_date: date | None = None,
+                to_date: date | None = None,
                 min_sum: int | None = None
     ) -> List[TransactionsOrm]:
         """Поиск транзакций по фильтрам"""
@@ -94,8 +94,8 @@ class AnalyticService:
             self,
             user_id: int,
             categories: List[str] | None = None,
-            from_date: datetime | None = None,
-            to_date: datetime | None = None
+            from_date: date | None = None,
+            to_date: date | None = None
     ) -> dict:
         
         

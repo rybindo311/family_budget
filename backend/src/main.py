@@ -1,10 +1,9 @@
-from functools import wraps
-from typing import List
+from typing import List, Optional
 
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import Depends, FastAPI, Query, HTTPException
 
 from database import SessionDep
-from schemas import TransactionCreate, TransactionResponse
+from schemas import TransactionCreate, TransactionResponse, TransictionFilters
 from services import TransactionsService
 
 app = FastAPI()
@@ -31,22 +30,22 @@ async def post_transactions (
         user_id=user_id
     )
         
-    response = TransactionResponse.model_validate(transaction)
-        
-    return response
+    return TransactionResponse.model_validate(transaction)
     
-@app.get("/transactions/")
+@app.get("/transactions/", response_model=List[TransactionResponse])
 async def get_transactions(
     session: SessionDep,
-    user_ids: List[int] = Query(...)) -> List[TransactionResponse]:
+    filters: TransictionFilters = Query()
+    ) -> List[TransactionResponse]:
     
     service = TransactionsService(session)
 
     transactions = await service.get_transactions(
-        user_ids=user_ids
+        **filters.model_dump(exclude_none=True)
     )
 
     return [
         TransactionResponse.model_validate(transaction)
         for transaction in transactions
     ]
+
